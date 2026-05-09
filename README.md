@@ -19,7 +19,7 @@ It targets a more compact than protobuf encoding goal. We aim for zero to two bi
 - binary encoding
 - binary decoding
 - validation
-- materialization is validation
+- decoding is validation
 - strings compression
 - forward compatible
 - LSP
