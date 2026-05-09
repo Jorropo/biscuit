@@ -1,6 +1,6 @@
 # BISCUIT or BISCUITS (name pending)
 
-- [ ] TODO figure out what the acronym stands for.
+TODO figure out what the acronym stands for.
 
 ***WIP*** expect breakages.
 
@@ -11,7 +11,7 @@ You write a `.biscuit` file schema, you then use the biscuit compiler to transla
 
 It targets a more compact than protobuf encoding goal. We aim for zero to two bits of encoding overhead over the minimum bound.
 
- - [ ] TODO figure out which languages to target.
+TODO figure out which languages to target.
 
 ## Proposed feature set:
 
@@ -20,18 +20,18 @@ It targets a more compact than protobuf encoding goal. We aim for zero to two bi
 - binary encoding
 - binary decoding
 - validation
-- materialization is validation
+- decoding is validation
+- forward compatible
+- highlighting config
 
 ### Might have
 - strings compression
-- forward compatible
 - LSP
-- highlighting config
 - ¿ compile `.biscuit` files to protobuf and add biscuit ←→ proto code generation ?
 
 ### Never have
  - non-deterministic interpretation
- - stateful encoding types (or at least discourage)
+ - out-of-band stateful encoding types (each message is self sufficient)
 
 ## What are the tradeoffs over protobuf ?
 
@@ -130,7 +130,7 @@ Size: number of bits used in the two's complement representation.
 
 Encoding:
 
- - [ ] TODO use zigzag encoding for ints ?
+TODO use zigzag encoding for ints ?
 
 First take the hard limit maximum value substract the hard limit minimum value,
 if `bitlen(uint(hard.max) - uint(hard.min)) < bitlen(uint(hard.max)) && bitlen(uint(hard.max) - uint(hard.min)) < bitlen(uint(hard.min))` shift the value by `v - uint(hard.min)` (for decoding do `d + uint(hard.min)`) also set size to `size = bitlen(uint(hard.max) - uint(hard.min))`.
