@@ -6,29 +6,36 @@ TODO figure out what the acronym stands for.
 
 ## What is it ?
 
-BISCUIT is a schema based data interchange format.
-You write a `.biscuit` file schema,
-you then use the biscuit compiler to translate it into friendly structs, validation, decode and encode functions in C, C++, Go or Rust (*currently planned languages*),
-finally you can use the encoded biscuit payloads on extremely bandwidth constrained payloads (database running an on MCU, sending packets of LoRa, ...).
+The BISCUIT is a schema based data interchange format.
+You write a `.biscuit` file schema, you then use the biscuit compiler to translate it into friendly structs, validation, decode and encode functions in C, C++, Go or Rust (*currently planned languages*), finally you can use the encoded biscuit payloads in extremely bandwidth constrained applications (database running an on MCU, sending packets over LoRa, etc.).
 
 It targets a more compact than protobuf encoding goal. We aim for zero to two bits of encoding overhead over the minimum bound.
 
-## Want feature set:
+TODO figure out which languages to target.
 
+## Proposed feature set:
+
+### Must have
 - memory safe
 - binary encoding
 - binary decoding
 - validation
 - decoding is validation
-- strings compression
 - forward compatible
-- LSP
 - highlighting config
+
+### Might have
+- strings compression
+- LSP
 - ¿ compile `.biscuit` files to protobuf and add biscuit ←→ proto code generation ?
+
+### Never have
+ - non-deterministic interpretation
+ - out-of-band stateful encoding types (each message is self sufficient)
 
 ## What are the tradeoffs over protobuf ?
 
-Theses tradeoff allows for biscuit to create smaller payloads:
+These are the tradeoffs that allow for biscuit to create smaller payloads:
 - impossible to skip over unknown fields with the schema
 - removed / deprecated fields forever cost ~1 bit.
   In protobuf you can remove a field from a schema, decoders will skip over it if they see it, and encoders wont emit it.
@@ -38,7 +45,7 @@ Theses tradeoff allows for biscuit to create smaller payloads:
   Each `.biscuit` file comes with a matching `.biscuit-history` file maintained by the biscuit compiler.
   Identical `.biscuit` files can have different binary encodings based on the order different fields were added.
 
-## How does the binary format looks ?
+## What does the binary format look like ?
 
 The format is made of 3 nested data streams:
 - byte datasteam
@@ -47,7 +54,7 @@ The format is made of 3 nested data streams:
 
 The top most level is made of a byte data stream, allocating more bytes just grows the size of the message.
 
-We then expose a bit datastream, everytime a bit is needed we first look if any bits are free in the bit datastream, if so we use theses;
+We then expose a bit datastream, everytime a bit is needed we first look if any bits are free in the bit datastream, if so we use these;
 otherwise we allocate one byte from the byte datastream and use it to provide 8 bits to the bit stream, distributed from MSB then LSB.
 
 ## Can you show an example schema ?
@@ -122,7 +129,8 @@ Signed types are `i1`, `i2`, `i3`, ... up to `i64` and work in the same way.
 Size: number of bits used in the two's complement representation.
 
 Encoding:
-*todo use zigzag encoding for ints ?*
+
+TODO use zigzag encoding for ints ?
 
 First take the hard limit maximum value substract the hard limit minimum value,
 if `bitlen(uint(hard.max) - uint(hard.min)) < bitlen(uint(hard.max)) && bitlen(uint(hard.max) - uint(hard.min)) < bitlen(uint(hard.min))` shift the value by `v - uint(hard.min)` (for decoding do `d + uint(hard.min)`) also set size to `size = bitlen(uint(hard.max) - uint(hard.min))`.
